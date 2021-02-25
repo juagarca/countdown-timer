@@ -1,4 +1,5 @@
 let duration = 0;
+let interval = null;
 const play = document.querySelector('.play');
 
 const app = () => {
@@ -22,23 +23,23 @@ const runTimer = (play, timeDisplay) => {
     startTimer(timeDisplay);
   } else {
     play.src = './images/play.svg';
+    stopTimer();
   }
 };
 
 const startTimer = (timeDisplay) => {
-  const interval = setInterval(function () {
+  interval = setInterval(function () {
       const minutes = Math.floor(duration / 60);
       const seconds = Math.floor(duration % 60);
       duration -= 1;
-      console.log(duration);
       setTimer(timeDisplay);
       if (duration == 0) {
-        stopTimer(interval);
+        stopTimer();
       }
   }, 1000);
 };
 
-const stopTimer = (interval) => {
+const stopTimer = () => {
   clearInterval(interval);
   setPlayImage();
 }
@@ -52,8 +53,8 @@ const setPlayImage = () => {
 };
 
 const setTimer = (timeDisplay) => {
-  if (duration <= 59) {
-    timeDisplay.textContent = `${Math.floor(duration / 60)}:${Math.floor(duration % 60)}`;
+  if (Math.floor(duration % 60) < 10) {
+    timeDisplay.textContent = `${Math.floor(duration / 60)}:0${Math.floor(duration % 60)}`;
   } else if (Math.floor(duration % 60) === 0) {
     timeDisplay.textContent = `${Math.floor(duration / 60)}:${Math.floor(duration % 60)}0`;
   } else {
@@ -66,6 +67,7 @@ buttons.forEach((button) => {
  button.addEventListener(('click'), (event) => {
   setDuration(event.currentTarget.getAttribute('data-time'));
   setPlayImage();
+  stopTimer();
 
   const timeDisplay = document.querySelector('.time-display');
   setTimer(timeDisplay);
